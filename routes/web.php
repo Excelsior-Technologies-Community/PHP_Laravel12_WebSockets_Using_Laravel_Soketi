@@ -1,13 +1,16 @@
 <?php
 
-use App\Events\MessageSent;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ChatController;
 
-Route::get('/send-message', function () {
-    broadcast(new MessageSent('Hello from Laravel WebSocket!'));
-    return 'Message Sent';
-});
 
-Route::get('/', function () {
-    return view('chat');
-});
+Route::get('/chat', [
+    ChatController::class,
+    'index'
+]);
+
+
+Route::post('/send-message', [
+    ChatController::class,
+    'send'
+]);

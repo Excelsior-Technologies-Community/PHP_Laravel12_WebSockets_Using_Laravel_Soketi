@@ -1,13 +1,25 @@
 import Echo from 'laravel-echo';
+
 import Pusher from 'pusher-js';
+
 
 window.Pusher = Pusher;
 
+
 window.Echo = new Echo({
-    broadcaster: 'pusher',
-    key: 'local',
-    wsHost: '127.0.0.1',
-    wsPort: 6001,
+
+    broadcaster: 'reverb',
+
+    key: import.meta.env.VITE_REVERB_APP_KEY,
+
+    wsHost: import.meta.env.VITE_REVERB_HOST,
+
+    wsPort: Number(import.meta.env.VITE_REVERB_PORT),
+
+    wssPort: Number(import.meta.env.VITE_REVERB_PORT),
+
     forceTLS: false,
-    disableStats: true,
+
+    enabledTransports: ['ws'],
+
 });
