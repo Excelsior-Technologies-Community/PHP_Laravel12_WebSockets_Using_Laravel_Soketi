@@ -3,33 +3,35 @@
 namespace App\Events;
 
 use Illuminate\Broadcasting\Channel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
+use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-
-class UserTyping implements ShouldBroadcast
+class UserTyping implements ShouldBroadcastNow
 {
+    use Dispatchable, SerializesModels;
 
-    use SerializesModels;
+    public function __construct(
+        public string $username,
+        public bool $isTyping = true
+    ) {}
 
-
-    public $username;
-
-
-    public function __construct($username)
+    public function broadcastOn(): array
     {
-        $this->username = $username;
+        return [new Channel('chat-channel')];
     }
 
-
-    public function broadcastOn()
-    {
-        return new Channel('chat-channel');
-    }
-
-
-    public function broadcastAs()
+    public function broadcastAs(): string
     {
         return 'user.typing';
+    }
+
+    public function broadcastWith(): array
+    {
+        return [
+            'username' => $this->username,
+            'is_typing' => $this->isTyping,
+            'timestamp' => now()->toIso8601String(),
+        ];
     }
 }

@@ -12,7 +12,14 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->validateCsrfTokens(except: [
+            'websocket/*',
+            'send-message',
+            'chat/*',
+            'notifications',
+            'notifications/*',
+            'broadcasting/*',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
